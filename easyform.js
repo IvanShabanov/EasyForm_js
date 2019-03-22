@@ -1,4 +1,3 @@
-
 'use strict';
 
 class EasyForm {
@@ -61,15 +60,15 @@ class EasyForm {
                     'placeholder': 'Номер телефона',
                     'title': 'Номер телефона',
                     'label': 'Номер телефона: ',
-                    'requred': 'requred',
+                    'required': 'required',
                 }),
             },
             'submitButton': 'Отправить',
             'messageSend': 'Ваше сообщение отправлено',
             'messageSending': 'Отправка...',
             'messageError': 'Что-то пошло не так, попробуйте позже.',
-            'messageErrorRequred': 'Заполните обязательное поле',
             'action': '',
+            'method': 'post',
             'ymID': '',
             'goal': 'sendform',
             'class': '',
@@ -81,56 +80,114 @@ class EasyForm {
             'beforeSend': function () { return true; },
             'afterSend': function () { return true; },
             'status': '',
+            'isModal': false,
+            'modalButton': {
+                'text': 'Заказать',
+                'class': '',
+            },
+            'modalHeader': 'Заказать',
+            'modalFooter': '',
         }, options);
         return settings;
     };
 
+    GenerateField(field) {
+        var form = '';
+        form += '<div class="form-group ' + field['type'] + '">';
+        if (field['label'] != '') {
+            form += '<label class="control-label" for="' + field['id'] + '">';
+            form += field['label'];
+            form += '</label>';
+        };
+        if (field['type'] == 'textarea') {
+            form += '<textarea ';
+        } else {
+            form += '<input ';
+        };
+        for (var key in field) {
+            form += 'class="form-control" ';
+            if ((field[key] != '') && (key != 'label')) {
+                form += '' + key + '="' + field[key] + '" '
+            };
+        };
+
+        if (field['type'] == 'textarea') {
+            form += '>' + field['value'] + '</textarea> ';
+        } else {
+            form += '/>';
+        };
+        form += '</div>';
+        return form;
+    };
+
     GenerateForm() {
         var form = '';
+
+        if (this.options['isModal']) {
+            form += '<button type="button" class="btn btn-primary ' + this.options['modalButton']['class'] + '" data-toggle="modal" data-target="#modal' + this.options['id'] + '">';
+            form += this.options['modalButton']['text'];
+            form += '</button>';
+
+            form += '<div class="modal fade" id="modal' + this.options['id'] + '" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">';
+            form += '<div class="modal-dialog modal-dialog-centered" role="document">';
+            form += '<div class="modal-content">';
+        };
+
         form += '<form';
         form += ' id="' + this.options['id'] + '"';
         form += ' class="' + this.options['class'] + '"';
         form += ' action="' + this.options['action'] + '"';
+        form += ' method="' + this.options['method'] + '"';
         form += '>';
+
+
+        if (this.options['isModal']) {
+            form += '<div class="modal-header">';
+            form += '<button type="button" class="close" data-dismiss="modal" aria-label="Close">'
+            form += '<span aria-hidden="true">&times;</span>';
+            form += '</button>';
+            form += '<h5 class="modal-title">' + this.options['modalHeader'] + '</h5>';
+
+            form += '</div>';
+
+            form += '<div class="modal-body">';
+        };
+
         form += this.options['htmlBefore'];
         for (var name in this.options['fields']) {
             var field = this.AddField(this.options['fields'][name]);
             field['name'] = name;
-            form += '<div class="form-group ' + field['type'] + '">';
-            if (field['label'] != '') {
-                form += '<label class="control-label" for="' + field['id'] + '">';
-                form += field['label'];
-                form += '</label>';
-            };
-            if (field['type'] == 'textarea') {
-                form += '<textarea ';
-            } else {
-                form += '<input ';
-            };
-            for (var key in field) {
-                form += 'class="form-control" ';
-                if ((field[key] != '') && (key != 'label')) {
-                    form += '' + key + '="' + field[key] + '" '
-                };
-            };
-
-            if (field['type'] == 'textarea') {
-                form += '</textarea> ';
-            } else {
-                form += '/>';
-            };
-            form += '</div>';
+            form += this.GenerateField(field);
         };
+
+        if (this.options['isModal']) {
+            form += '</div>';
+            form += '<div class="modal-footer">';
+        };
+
         form += '<button type="submit" class="btn btn-default">' + this.options['submitButton'] + '</button>';
         form += this.options['htmlAfter'];
         form += '<div class="formMessage alert alert-primary" role="alert"></div>';
+
+        if (this.options['isModal']) {
+            form += this.options['modalFooter'];
+            form += '</div>';
+        };
+
         form += '</form>';
+
+        if (this.options['isModal']) {
+            form += '</div>';
+            form += '</div>';
+            form += '</div>';
+        };
+        this.options['status'] = '';
         return form;
     };
 
     ShowForm() {
         var $this = this;
-        if (typeof this.options['   beforeShow'] == 'function') {
+        if (typeof this.options['beforeShow'] == 'function') {
             this.options['beforeShow']();
         }
 
@@ -139,6 +196,8 @@ class EasyForm {
         if (typeof this.options['afterShow'] == 'function') {
             this.options['afterShow']();
         }
+        $('#' + this.options['id']).find('.formMessage').hide();
+        this.options['status'] = '';
 
         $('#' + this.options['id']).submit(function (event) {
             var cansend = true;
@@ -154,8 +213,8 @@ class EasyForm {
                     var form = $(this);
                     var data = $(form).serialize();
                     var url = $(form).attr('action');
+                    $(form).find('.formMessage').show(200);
                     $(form).find('.formMessage').html($this.options['messageSending']);
-
                     $.ajax({
                         url: url,
                         type: 'post',
@@ -171,14 +230,24 @@ class EasyForm {
                                 $this.Goal($this.options['ymID'], $this.options['goal']);
                             };
                             $this.options['status'] = '';
+                            setTimeout(function () {
+                                $(form).find('.formMessage').hide(200);
+                            }, 3000);
                         },
                         error: function (result) {
                             $(form).find('.formMessage').html($this.options['messageError']);
                             $this.options['status'] = '';
+                            setTimeout(function () {
+                                $(form).find('.formMessage').hide(200);
+                            }, 3000);
+
                         }
                     });
                 };
             };
         });
     };
+
+
+
 };
