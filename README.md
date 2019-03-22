@@ -5,35 +5,35 @@
 Как пользоваться:
 
 
-  <head>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
-    <script src='//yastatic.net/jquery/3.3.1/jquery.min.js' type='text/javascript'></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
-    <script src="easyform.js"></script>
-  </head>
-  <body>
-  ....
-  Сюда добавим форму 
-     <script>
-        var form = new EasyForm();
-        /* Меняем опции формы */
-        form.options['isModal'] = true;
-        form.options['modalButton'] = {
-                'text': 'Открыть форму',
-                'class': '',
+      <head>
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+        <script src='//yastatic.net/jquery/3.3.1/jquery.min.js' type='text/javascript'></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+        <script src="easyform.js"></script>
+      </head>
+      <body>
+      ....
+      Сюда добавим форму 
+         <script>
+            var form = new EasyForm();
+            /* Меняем опции формы */
+            form.options['isModal'] = true;
+            form.options['modalButton'] = {
+                    'text': 'Открыть форму',
+                    'class': '',
+                };
+            /* Поля формы */
+            form.options['fields'] = {
+                'phone': form.AddField({
+                    'placeholder': 'Номер телефона',
+                    'title': 'Введите номер телефона',
+                })
             };
-        /* Поля формы */
-        form.options['fields'] = {
-            'phone': form.AddField({
-                'placeholder': 'Номер телефона',
-                'title': 'Введите номер телефона',
-            })
-        };
-        /* Выводим форму */
-        form.ShowForm();
-    </script>
-  ...
-  </body>  
+            /* Выводим форму */
+            form.ShowForm();
+        </script>
+      ...
+      </body>  
 
 
 Опции формы:
