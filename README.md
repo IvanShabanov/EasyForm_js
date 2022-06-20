@@ -5,42 +5,42 @@
 Как пользоваться:
 
 
-      <head>
-        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
-        <script src='//yastatic.net/jquery/3.3.1/jquery.min.js' type='text/javascript'></script>
-        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
-        <script src="easyform.js"></script>
-      </head>
-      <body>
-      ....
-      Сюда добавим форму 
-         <script>
-            var form = new EasyForm();
-            /* Меняем опции формы */
-            form.options['isModal'] = true;
-            form.options['modalButton'] = {
-                    'text': 'Открыть форму',
-                    'class': '',
+        <head>
+            <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
+            <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js"></script>
+            <script src='https://yastatic.net/jquery/3.3.1/jquery.min.js' type='text/javascript'></script>
+            <script src="easyform.js"></script>
+        </head>
+        <body>
+        ....
+        Сюда добавим форму
+            <script>
+                var form = new EasyForm();
+                /* Меняем опции формы */
+                form.options['isModal'] = true;
+                form.options['modalButton'] = {
+                        'text': 'Открыть форму',
+                        'class': '',
+                    };
+                /* Поля формы */
+                form.options['fields'] = {
+                    'phone': form.AddField({
+                        'placeholder': 'Номер телефона',
+                        'title': 'Введите номер телефона',
+                    })
                 };
-            /* Поля формы */
-            form.options['fields'] = {
-                'phone': form.AddField({
-                    'placeholder': 'Номер телефона',
-                    'title': 'Введите номер телефона',
-                })
-            };
-            /* Выводим форму */
-            form.ShowForm();
-        </script>
-      ...
-      </body>  
+                /* Выводим форму */
+                form.ShowForm();
+            </script>
+        ...
+        </body>
 
 
 Опции формы:
 
             'fields': {                             /* Описываем поля формы */
                 'name': this.AddField({
-                    'placeholder': 'Ваше имя',   
+                    'placeholder': 'Ваше имя',
                     'title': 'Ваше имя',
                     'label': 'Ваше имя: ',
                 }),
@@ -57,8 +57,6 @@
             'messageError': 'Что-то пошло не так, попробуйте позже.',   /* Сообщение о ошибки во время отправки */
             'action': '',                           /* Адрес программы или документа, который обрабатывает данные формы. */
             'method': 'post',                       /* Метод протокола HTTP */
-            'ymID': '',                             /* ID счетчика Yandex метрики */
-            'goal': 'sendform',                     /* идентификатор цели Yandex метрики и/или Google Analitics */
             'class': '',                            /* Класс формы */
             'id': this.GenerateId('el_form'),       /* ID формы */
             'htmlBefore': '',                       /* html Текст выводимый перед формой  */
