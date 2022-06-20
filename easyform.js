@@ -6,30 +6,6 @@ class EasyForm {
         this.options = this.DefaultOptions(options);
     };
 
-    Goal(ymID, GOALNAME) {
-        if (GOALNAME != '') {
-            var yc = 'yaCounter' + ymID;
-            /* Проверим загрузился ли счетчик Yandex */
-            if (typeof window[yc] !== 'undefined') {
-                window[yc].reachGoal(GOALNAME);
-            };
-            if (typeof ym !== 'undefined') {
-                ym(ymID, 'reachGoal', GOALNAME);
-            };
-            /* Проверим загрузился ли Google Analytics */
-            if (typeof ga !== 'undefined') {
-                ga('send', 'event', 'form', 'submit', GOALNAME);
-            };
-            if (typeof gtag !== 'undefined') {
-                gtag('event', 'form_send', {
-                    'event_category': 'form',
-                    'event_action': 'submit',
-                    'event_label': GOALNAME
-                });
-            };
-        };
-    };
-
     GenerateId(prefix) {
         return 'id_' + prefix + '_' + Date.now() + parseInt(Math.floor(Math.random() * (99999 - 999)) + 9999);
     };
@@ -222,7 +198,6 @@ class EasyForm {
                             if (isOk) {
                                 $(form).find('.form-control').val('');
                                 $(form).find('.formMessage').html($this.options['messageSend']);
-                                $this.Goal($this.options['ymID'], $this.options['goal']);
                             };
                             $this.options['status'] = '';
                             setTimeout(function () {
@@ -235,7 +210,6 @@ class EasyForm {
                             setTimeout(function () {
                                 $(form).find('.formMessage').hide(200);
                             }, 3000);
-
                         }
                     });
                 };
