@@ -11,7 +11,7 @@ class EasyForm {
     };
 
     AddField(options) {
-        var field = $.extend({
+        let field = $.extend({
             'name': this.GenerateId('name'),
             'type': 'text',
             'placeholder': '',
@@ -25,7 +25,7 @@ class EasyForm {
     };
 
     DefaultOptions(options) {
-        var settings = $.extend({
+        let settings = $.extend({
             'fields': {
                 'name': this.AddField({
                     'placeholder': 'Ваше имя',
@@ -66,8 +66,8 @@ class EasyForm {
     };
 
     GenerateField(field) {
-        var form = '';
-        form += '<div class="form-group ' + field['type'] + '">';
+        let form = '';
+        form += '<div class="mb-3 ' + field['type'] + '">';
         if (field['label'] != '') {
             form += '<label class="control-label" for="' + field['id'] + '">';
             form += field['label'];
@@ -78,7 +78,7 @@ class EasyForm {
         } else {
             form += '<input ';
         };
-        for (var key in field) {
+        for (let key in field) {
             form += 'class="form-control" ';
             if ((field[key] != '') && (key != 'label')) {
                 form += '' + key + '="' + field[key] + '" '
@@ -95,7 +95,7 @@ class EasyForm {
     };
 
     GenerateForm() {
-        var form = '';
+        let form = '';
 
         if (this.options['isModal']) {
             form += '<button type="button" class="btn btn-primary ' + this.options['modalButton']['class'] + '" data-bs-toggle="modal" data-bs-target="#modal' + this.options['id'] + '">';
@@ -125,8 +125,8 @@ class EasyForm {
         };
 
         form += this.options['htmlBefore'];
-        for (var name in this.options['fields']) {
-            var field = this.AddField(this.options['fields'][name]);
+        for (let name in this.options['fields']) {
+            let field = this.AddField(this.options['fields'][name]);
             field['name'] = name;
             form += this.GenerateField(field);
         };
@@ -157,7 +157,7 @@ class EasyForm {
     };
 
     ShowForm() {
-        var $this = this;
+        let $this = this;
         if (typeof this.options['beforeShow'] == 'function') {
             this.options['beforeShow']();
         }
@@ -171,7 +171,7 @@ class EasyForm {
         this.options['status'] = '';
 
         $('#' + this.options['id']).submit(function (event) {
-            var cansend = true;
+            let cansend = true;
             event.preventDefault();
 
             if (typeof $this.options['beforeSend'] == 'function') {
@@ -181,9 +181,9 @@ class EasyForm {
 
                 if ($this.options['status'] == '') {
                     $this.options['status'] = 'sending';
-                    var form = $(this);
-                    var data = $(form).serialize();
-                    var url = $(form).attr('action');
+                    let form = $(this);
+                    let data = $(form).serialize();
+                    let url = $(form).attr('action');
                     $(form).find('.formMessage').show(200);
                     $(form).find('.formMessage').html($this.options['messageSending']);
                     $.ajax({
@@ -191,7 +191,7 @@ class EasyForm {
                         type: 'post',
                         data: data,
                         success: function (result) {
-                            var isOk = true;
+                            let isOk = true;
                             if (typeof $this.options['afterSend'] == 'function') {
                                 isOk = $this.options['afterSend'](result);
                             };
