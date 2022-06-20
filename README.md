@@ -8,7 +8,6 @@
         <head>
             <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
             <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js"></script>
-            <script src='https://yastatic.net/jquery/3.3.1/jquery.min.js' type='text/javascript'></script>
             <script src="easyform.js"></script>
         </head>
         <body>
