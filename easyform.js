@@ -11,7 +11,7 @@ class EasyForm {
     };
 
     AddField(options) {
-        let field = $.extend({
+        let field = this.extend({
             'name': this.GenerateId('name'),
             'type': 'text',
             'placeholder': '',
@@ -25,7 +25,7 @@ class EasyForm {
     };
 
     DefaultOptions(options) {
-        let settings = $.extend({
+        let settings = this.extend({
             'fields': {
                 'name': this.AddField({
                     'placeholder': 'Ваше имя',
@@ -156,67 +156,89 @@ class EasyForm {
         return form;
     };
 
-    ShowForm() {
-        let $this = this;
-        if (typeof this.options['beforeShow'] == 'function') {
-            this.options['beforeShow']();
+    ShowForm(selector) {
+        let this_class = this;
+        if (typeof this_class.options['beforeShow'] == 'function') {
+            this_class.options['beforeShow']();
         }
 
-        document.write(this.GenerateForm());
-
-        if (typeof this.options['afterShow'] == 'function') {
-            this.options['afterShow']();
+        if (typeof selector !== 'undefined') {
+            let place = document.querySelector(selector);
+            if (typeof place !== 'undefined') {
+                place.innerHTML = this_class.GenerateForm();
+            }
+        } else {
+            document.write(this_class.GenerateForm());
         }
-        $('#' + this.options['id']).find('.formMessage').hide();
-        this.options['status'] = '';
 
-        $('#' + this.options['id']).submit(function (event) {
+        if (typeof this_class.options['afterShow'] == 'function') {
+            this_class.options['afterShow']();
+        }
+        let this_form = document.querySelector('#' + this_class.options['id']);
+        if (typeof this_form !== 'undefined') {
+            let message_div = this_form.find('.formMessage');
+            if (typeof message_div !== 'undefined') {
+                message_div.classList.add('hidden');
+            };
+            ththis_classis.options['status'] = '';
+
+
+        }
+
+        this_form.addEventListener('submit', function (event) {
             let cansend = true;
             event.preventDefault();
 
-            if (typeof $this.options['beforeSend'] == 'function') {
-                cansend = $this.options['beforeSend']();
+            if (typeof this_class.options['beforeSend'] == 'function') {
+                cansend = this_class.options['beforeSend']();
             };
             if (cansend) {
 
-                if ($this.options['status'] == '') {
-                    $this.options['status'] = 'sending';
-                    let form = $(this);
-                    let data = $(form).serialize();
-                    let url = $(form).attr('action');
-                    $(form).find('.formMessage').show(200);
-                    $(form).find('.formMessage').html($this.options['messageSending']);
-                    $.ajax({
-                        url: url,
-                        type: 'post',
-                        data: data,
-                        success: function (result) {
-                            let isOk = true;
-                            if (typeof $this.options['afterSend'] == 'function') {
-                                isOk = $this.options['afterSend'](result);
-                            };
-                            if (isOk) {
-                                $(form).find('.form-control').val('');
-                                $(form).find('.formMessage').html($this.options['messageSend']);
-                            };
-                            $this.options['status'] = '';
-                            setTimeout(function () {
-                                $(form).find('.formMessage').hide(200);
-                            }, 3000);
-                        },
-                        error: function (result) {
-                            $(form).find('.formMessage').html($this.options['messageError']);
-                            $this.options['status'] = '';
-                            setTimeout(function () {
-                                $(form).find('.formMessage').hide(200);
-                            }, 3000);
-                        }
+                if (this_class.options['status'] == '') {
+                    this_class.options['status'] = 'sending';
+                    let data = new FormData(this_form);
+                    let url = this_form.getAttribute('action');
+                    message_div.innerHTML = this_class.options['messageSending'];
+                    message_div.classList.remove('hidden');
+
+
+                    fetch(url,{
+                        method: 'POST',
+                        body: data,
+                    }).then(function (response) {
+                        return response.text(); /* to get HTML */
+                        //return response.json(); /* to get JSON */
+                    }).then(function (result) {
+                        let isOk = true;
+                        if (typeof this_class.options['afterSend'] == 'function') {
+                            isOk = this_class.options['afterSend'](result);
+                        };
+                        if (isOk) {
+                            this_form.reset();
+                            message_div.innerHTML = this_class.options['messageSend'];
+                        };
+                        this_class.options['status'] = '';
+                        setTimeout(function () {
+                            message_div.classList.add('hidden');
+                        }, 3000);
+                    })
+                    .catch(function (err) {
+                        message_div.innerHTML = this_class.options['messageError']
+                        setTimeout(function () {
+                            message_div.classList.add('hidden');
+                        }, 3000);
                     });
                 };
             };
         });
     };
 
-
+    extend(){
+        for(var i=1; i<arguments.length; i++)
+            for(var key in arguments[i])
+                if(arguments[i].hasOwnProperty(key))
+                    arguments[0][key] = arguments[i][key];
+        return arguments[0];
+    };
 
 };
