@@ -69,8 +69,6 @@ class EasyForm {
             'messageError': 'Что-то пошло не так, попробуйте позже.',
             'action': '',
             'method': 'post',
-            'ymID': '',
-            'goal': 'sendform',
             'class': '',
             'id': this.GenerateId('el_form'),
             'htmlBefore': '',
@@ -124,7 +122,7 @@ class EasyForm {
         var form = '';
 
         if (this.options['isModal']) {
-            form += '<button type="button" class="btn btn-primary ' + this.options['modalButton']['class'] + '" data-toggle="modal" data-target="#modal' + this.options['id'] + '">';
+            form += '<button type="button" class="btn btn-primary ' + this.options['modalButton']['class'] + '" data-bs-toggle="modal" data-bs-target="#modal' + this.options['id'] + '">';
             form += this.options['modalButton']['text'];
             form += '</button>';
 
@@ -143,11 +141,8 @@ class EasyForm {
 
         if (this.options['isModal']) {
             form += '<div class="modal-header">';
-            form += '<button type="button" class="close" data-dismiss="modal" aria-label="Close">'
-            form += '<span aria-hidden="true">&times;</span>';
-            form += '</button>';
             form += '<h5 class="modal-title">' + this.options['modalHeader'] + '</h5>';
-
+            form += '<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>';
             form += '</div>';
 
             form += '<div class="modal-body">';
